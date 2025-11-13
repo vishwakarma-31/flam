@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.flam"
     compileSdk {
-        version = release(36)
+        version = release(34)
     }
 
     defaultConfig {
