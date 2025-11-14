@@ -5,7 +5,7 @@ This project is a complete implementation of the Android + OpenCV-C++ + OpenGL A
 ## ✅ Features Implemented
 
 ### 📱 Android Application
-- **Camera Feed Integration**: Uses Camera2 API for real-time camera frame capture
+- **Camera Feed Integration**: Uses CameraX for real-time camera frame capture
 - **OpenCV C++ Processing**: Native C++ implementation of Canny Edge Detection and grayscale filtering
 - **OpenGL ES Rendering**: Smooth real-time rendering of processed frames using OpenGL ES 2.0
 - **JNI Communication**: Efficient Java ↔ C++ communication for frame processing
@@ -20,17 +20,14 @@ This project is a complete implementation of the Android + OpenCV-C++ + OpenGL A
 
 ## 📸 Screenshots
 
-![Main Screen](images/Main_screen.png)
+![Main Screen](images/Main.jpg)
 *Main application screen with controls*
 
 ![Edge Detection](images/Edge.jpg)
 *Real-time edge detection view*
 
-![Phone View](images/Phonee.jpg)
-*Phone view*
-
-![Main Screen](images/Main.jpg)
-*Real Image*
+![Professional View](images/Pro.jpg)
+*Professional view with statistics*
 
 ## ⚙️ Architecture
 
@@ -49,7 +46,7 @@ flam/
 
 ### Component Flow
 
-1. **Camera Capture**: Android Camera2 API captures frames and sends to native processor
+1. **Camera Capture**: Android CameraX captures frames and sends to native processor
 2. **JNI Interface**: Java code communicates with C++ via JNI for frame processing
 3. **Native Processing**: OpenCV C++ applies Canny Edge Detection or grayscale filter
 4. **OpenGL Rendering**: Processed frames rendered in real-time using OpenGL ES 2.0
@@ -59,7 +56,7 @@ flam/
 ## 🧩 Technical Implementation
 
 ### 1. 📸 Camera Feed Integration
-- Uses Android Camera2 API for efficient camera access
+- Uses Android CameraX with ImageAnalysis for efficient camera access
 - Implements SurfaceTexture for direct OpenGL integration
 - Handles camera permissions and lifecycle management
 
@@ -88,46 +85,116 @@ Key C++ files:
 ## 🚀 Setup Instructions
 
 ### Prerequisites
-- Android Studio with NDK support
+- Android Studio with NDK support (version 25.0 or higher)
 - OpenCV Android SDK (version 4.x)
-- Node.js and npm for web viewer
+- Node.js (version 16.0 or higher) and npm for web viewer
+- Physical Android device (API level 24 or higher) for testing
 
-### Android App Setup
+### OpenCV SDK Setup
 
-1. Clone the repository:
+1. **Download OpenCV**:
+   - Download OpenCV Android SDK from [OpenCV releases page](https://opencv.org/releases/)
+   - Extract to a known location (e.g., `C:\opencv-android` or `/opt/opencv-android`)
+
+2. **Configure CMakeLists.txt**:
+   - Open [app/src/cpp/CMakeLists.txt](file:///d:/Projects/flam/app/src/cpp/CMakeLists.txt)
+   - Update line 11 with the correct path to your OpenCV SDK:
+     ```cmake
+     set(OpenCV_DIR "YOUR_OPENCV_PATH/sdk/native/jni")
+     ```
+   - Example for Windows:
+     ```cmake
+     set(OpenCV_DIR "C:/opencv-android/sdk/native/jni")
+     ```
+   - Example for macOS/Linux:
+     ```cmake
+     set(OpenCV_DIR "/opt/opencv-android/sdk/native/jni")
+     ```
+
+3. **Verify OpenCV Integration**:
+   - Android Studio should automatically detect the OpenCV libraries
+   - If you encounter issues, ensure the path in CMakeLists.txt is correct
+
+### Android App Build and Run
+
+1. **Clone the repository**:
    ```bash
    git clone <repository-url>
+   cd flam
    ```
 
-2. Open the project in Android Studio
+2. **Open in Android Studio**:
+   - Open Android Studio
+   - Select "Open an existing Android Studio project"
+   - Navigate to the project directory and open it
 
-3. Set up OpenCV:
-   - Download OpenCV Android SDK
-   - Link OpenCV library to the project
-   - Update `CMakeLists.txt` with correct OpenCV path if needed
+3. **Sync Project**:
+   - Android Studio will automatically sync the project
+   - Wait for Gradle sync to complete
 
-4. Build and run on a physical Android device
+4. **Build the project**:
+   ```bash
+   # Using Gradle wrapper (from project root)
+   ./gradlew build
+   
+   # Or on Windows
+   gradlew.bat build
+   ```
 
-### Web Viewer Setup
+5. **Run on device**:
+   - Connect a physical Android device with USB debugging enabled
+   - In Android Studio, select the device from the device dropdown
+   - Click "Run" or use:
+   ```bash
+   # Using Gradle wrapper
+   ./gradlew installDebug
+   
+   # Or on Windows
+   gradlew.bat installDebug
+   ```
 
-1. Navigate to the web directory:
+6. **Alternative run method**:
+   - In Android Studio, click the green "Run" button
+   - Or press Shift+F10 (Windows/Linux) or Ctrl+R (macOS)
+
+### Web Viewer Build and Run
+
+1. **Navigate to web directory**:
    ```bash
    cd web
    ```
 
-2. Install dependencies:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. Start the development server:
+3. **Start development server**:
    ```bash
    npm run dev
    ```
+   - The web viewer will be available at `http://localhost:5173`
+   - The server includes hot-reloading for development
 
-4. Build for production:
+4. **Build for production**:
    ```bash
    npm run build
+   ```
+   - Production build will be output to the `dist` folder
+
+5. **Preview production build**:
+   ```bash
+   npm run preview
+   ```
+   - Serves the production build locally for testing
+
+6. **Alternative build commands**:
+   ```bash
+   # Using Vite directly (if installed globally)
+   vite build
+   
+   # Serve the built files
+   vite preview
    ```
 
 ## 🧠 Architecture Explanation
@@ -139,7 +206,7 @@ The project uses JNI for efficient communication between Java and C++:
 - Direct memory access minimizes copying overhead
 
 ### Frame Flow
-1. Camera2 API captures frame → Java Bitmap
+1. CameraX captures frame → Java Bitmap
 2. Java passes Bitmap to C++ via JNI
 3. C++ converts Bitmap to OpenCV Mat
 4. OpenCV processes frame (edge detection or grayscale)
@@ -172,8 +239,8 @@ The project uses JNI for efficient communication between Java and C++:
 /app/src/main/java/
 ├── com.yourname.edgedetection/
 │   ├── MainActivity.java   # Main application activity
-│   ├── WebSocketServer.java # WebSocket server implementation
-│   └── NativeProcessor.java # JNI wrapper class
+│   ├── NativeProcessor.java # JNI wrapper class
+│   └── CameraFrameProcessor.java # Camera frame processing
 ├── com.gl/
 │   └── GLRenderer.java     # OpenGL ES renderer
 /web/
