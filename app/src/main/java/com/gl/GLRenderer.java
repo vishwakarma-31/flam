@@ -1,8 +1,7 @@
-package com.yourpackage.gl;
+package com.gl;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -101,7 +100,6 @@ public class GLRenderer implements GLSurfaceView.Renderer {
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
                     frameWidth, frameHeight, 0,
                     GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, bb);
-            // TODO: adjust UVs / aspect ratio if desired
         }
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);

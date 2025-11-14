@@ -144,7 +144,6 @@ class EdgeDetectionViewer {
     
     private onWebSocketError(error: Event): void {
         this.log('WebSocket error occurred', 'error');
-        console.error('WebSocket error:', error);
     }
     
     private onWebSocketClose(): void {

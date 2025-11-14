@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             imageAnalysis
         );
         
-        Log.d(TAG, "Camera started successfully");
+
     }
     
     private boolean checkCameraPermission() {

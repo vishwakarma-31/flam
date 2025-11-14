@@ -1,8 +1,6 @@
 package com.yourname.edgedetection;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -140,7 +138,7 @@ public class CameraFrameProcessor implements ImageAnalysis.Analyzer {
      */
     public void toggleEdgeDetection() {
         applyEdgeDetection = !applyEdgeDetection;
-        Log.d(TAG, "Edge detection: " + (applyEdgeDetection ? "ON" : "OFF"));
+
     }
     
     /**

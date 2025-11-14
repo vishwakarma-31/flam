@@ -6,7 +6,6 @@
 #include "EdgeProcessor.h"
 
 #define LOG_TAG "NativeLib"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
@@ -115,7 +114,7 @@ Java_com_yourname_edgedetection_NativeProcessor_initProcessor(
         g_processor = new EdgeProcessor();
         LOGI("EdgeProcessor initialized successfully");
     } else {
-        LOGD("EdgeProcessor already initialized");
+
     }
 }
 
@@ -150,6 +149,7 @@ Java_com_yourname_edgedetection_NativeProcessor_processFrame(
     // Convert input bitmap to Mat
     if (!bitmapToMat(env, bitmapIn, inputMat)) {
         LOGE("Failed to convert input bitmap to Mat");
+        AndroidBitmap_unlockPixels(env, bitmapIn);
         return;
     }
     
@@ -157,11 +157,9 @@ Java_com_yourname_edgedetection_NativeProcessor_processFrame(
         // Process frame based on mode
         if (applyEdgeDetection) {
             outputMat = g_processor->processFrame(inputMat);
-            LOGD("Applied edge detection");
         } else {
             // Just copy input to output (raw camera feed)
             outputMat = inputMat.clone();
-            LOGD("Raw feed mode");
         }
         
         // Check if processing was successful
