@@ -1,0 +1,25 @@
+{
+  "name": "edge-detection-viewer",
+  "version": "1.0.0",
+  "description": "Web viewer for edge detection frames from Android app",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "edge-detection",
+    "websocket",
+    "android",
+    "viewer"
+  ],
+  "author": "Flam Project",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+  }
+}
