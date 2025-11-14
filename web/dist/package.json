@@ -1,0 +1,23 @@
+{
+  "name": "edge-detection-web-viewer",
+  "version": "1.0.0",
+  "description": "Web-based viewer for edge detection frames from Android app",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "python -m http.server 8080 --directory dist",
+    "dev": "npm run build && npm run serve"
+  },
+  "keywords": [
+    "edge-detection",
+    "opencv",
+    "android",
+    "websocket"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
