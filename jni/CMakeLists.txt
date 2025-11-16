@@ -8,8 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set OpenCV directory path
 # Adjust this path based on where you placed OpenCV SDK
-set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/src/main/jniLibs/OpenCV/sdk/native/jni)
-find_package(OpenCV REQUIRED)
+set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/src/main/jniLibs/OpenCV/OpenCV-android-sdk/sdk/native/jni)
 # Find OpenCV package
 find_package(OpenCV REQUIRED)
 
