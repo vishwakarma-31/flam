@@ -62,6 +62,9 @@ public class CameraFrameProcessor implements ImageAnalysis.Analyzer {
                 // Get processing time from native code
                 double processingTime = NativeProcessor.getProcessingTime();
                 
+                // Update OpenGL texture for rendering
+                mainActivity.updateGLTexture(processedBitmap);
+                
                 // ⭐ SEND TO WEB VIEWER ⭐
                 mainActivity.sendFrameToWebViewer(processedBitmap);
                 
@@ -76,18 +79,15 @@ public class CameraFrameProcessor implements ImageAnalysis.Analyzer {
                     );
                 }
                 
-                // Update OpenGL texture (if you have GLRenderer)
-                // mainActivity.updateGLTexture(processedBitmap);
-                
                 // Clean up
                 inputBitmap.recycle();
                 
             } else {
-                Log.w(TAG, "Failed to convert ImageProxy to Bitmap");
+                // Log.w(TAG, "Failed to convert ImageProxy to Bitmap");
             }
             
         } catch (Exception e) {
-            Log.e(TAG, "Error processing frame", e);
+            // Log.e(TAG, "Error processing frame", e);
         } finally {
             // CRITICAL: Always close the imageProxy
             imageProxy.close();

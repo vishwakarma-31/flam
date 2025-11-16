@@ -36,9 +36,10 @@ flam/
 ├── app/                 # Android application
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── cpp/     # Native C++ code with OpenCV
 │   │   │   ├── java/    # Java/Kotlin source code
 │   │   │   └── res/     # Resources and layouts
+├── jni/                 # Native C++ code with OpenCV
+├── gl/                  # OpenGL renderer classes
 ├── web/                 # TypeScript web viewer
 ├── images/              # Screenshot images
 └── ...
@@ -97,7 +98,7 @@ Key C++ files:
    - Extract to a known location (e.g., `C:\opencv-android` or `/opt/opencv-android`)
 
 2. **Configure CMakeLists.txt**:
-   - Open [app/src/cpp/CMakeLists.txt](file:///d:/Projects/flam/app/src/cpp/CMakeLists.txt)
+   - Open [jni/CMakeLists.txt](file:///d:/Projects/flam/jni/CMakeLists.txt)
    - Update line 11 with the correct path to your OpenCV SDK:
      ```cmake
      set(OpenCV_DIR "YOUR_OPENCV_PATH/sdk/native/jni")
@@ -232,17 +233,17 @@ The project uses JNI for efficient communication between Java and C++:
 ## 📦 Project Structure Details
 
 ```
-/app/src/main/cpp/
-├── CMakeLists.txt          # Build configuration for native code
-├── EdgeProcessor.h/cpp     # OpenCV edge detection implementation
-├── native-lib.cpp          # JNI interface and bitmap conversion
 /app/src/main/java/
 ├── com.yourname.edgedetection/
 │   ├── MainActivity.java   # Main application activity
 │   ├── NativeProcessor.java # JNI wrapper class
 │   └── CameraFrameProcessor.java # Camera frame processing
-├── com.gl/
-│   └── GLRenderer.java     # OpenGL ES renderer
+/gl/
+├── GLRenderer.java     # OpenGL ES renderer
+/jni/
+├── CMakeLists.txt          # Build configuration for native code
+├── EdgeProcessor.h/cpp     # OpenCV edge detection implementation
+├── native-lib.cpp          # JNI interface and bitmap conversion
 /web/
 ├── src/
 │   ├── app.ts              # Main TypeScript application

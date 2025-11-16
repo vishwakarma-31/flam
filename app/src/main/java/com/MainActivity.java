@@ -3,6 +3,7 @@ package com.yourname.edgedetection;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import gl.GLRenderer;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.net.InetAddress;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     
     // UI Components
     private PreviewView previewView;
+    private GLSurfaceView glSurfaceView;
     private TextView serverStatusText;
     private TextView ipAddressText;
     private TextView fpsText;
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private CameraFrameProcessor frameProcessor;
     private ExecutorService cameraExecutor;
     
+    // OpenGL Renderer
+    private GLRenderer glRenderer;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         
         // Initialize UI components
         initializeUI();
+        
+        // Set up OpenGL renderer
+        setupOpenGLRenderer();
         
         // Set up WebSocket server
         setupWebSocketServer();
@@ -79,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     
     private void initializeUI() {
         previewView = findViewById(R.id.previewView);
+        glSurfaceView = findViewById(R.id.glSurfaceView);
         serverStatusText = findViewById(R.id.serverStatus);
         ipAddressText = findViewById(R.id.ipAddress);
         fpsText = findViewById(R.id.fpsText);
@@ -89,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
         // Initial states
         stopServerButton.setEnabled(false);
         fpsText.setText("FPS: 0");
+    }
+    
+    private void setupOpenGLRenderer() {
+        glRenderer = new GLRenderer();
+        glSurfaceView.setEGLContextClientVersion(2);
+        glSurfaceView.setRenderer(glRenderer);
+        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
     
     private void setupWebSocketServer() {
@@ -181,6 +198,15 @@ public class MainActivity extends AppCompatActivity {
                          "Edge Detection" : "Raw Feed";
             toggleEdgeButton.setText("Mode: " + mode);
             Toast.makeText(this, "Switched to " + mode, Toast.LENGTH_SHORT).show();
+            
+            // Toggle between camera preview and OpenGL rendering
+            if (frameProcessor.isEdgeDetectionEnabled()) {
+                previewView.setVisibility(android.view.View.GONE);
+                glSurfaceView.setVisibility(android.view.View.VISIBLE);
+            } else {
+                previewView.setVisibility(android.view.View.VISIBLE);
+                glSurfaceView.setVisibility(android.view.View.GONE);
+            }
         }
     }
     
@@ -208,6 +234,33 @@ public class MainActivity extends AppCompatActivity {
      */
     public void updateFpsDisplay(double fps) {
         fpsText.setText(String.format("FPS: %.1f", fps));
+    }
+    
+    /**
+     * Update OpenGL texture with processed frame
+     */
+    public void updateGLTexture(Bitmap processedFrame) {
+        if (glRenderer != null && processedFrame != null) {
+            // Convert bitmap to RGBA byte array for OpenGL
+            int width = processedFrame.getWidth();
+            int height = processedFrame.getHeight();
+            int[] pixels = new int[width * height];
+            processedFrame.getPixels(pixels, 0, width, 0, 0, width, height);
+            
+            // Convert ARGB to RGBA
+            byte[] rgbaBytes = new byte[width * height * 4];
+            for (int i = 0; i < pixels.length; i++) {
+                int pixel = pixels[i];
+                rgbaBytes[i * 4] = (byte) ((pixel >> 16) & 0xFF);     // R
+                rgbaBytes[i * 4 + 1] = (byte) ((pixel >> 8) & 0xFF);  // G
+                rgbaBytes[i * 4 + 2] = (byte) (pixel & 0xFF);         // B
+                rgbaBytes[i * 4 + 3] = (byte) ((pixel >> 24) & 0xFF); // A
+            }
+            
+            // Update OpenGL texture
+            glRenderer.updateFrame(rgbaBytes, width, height);
+            glSurfaceView.requestRender();
+        }
     }
     
     private void displayIpAddress() {
@@ -283,8 +336,6 @@ public class MainActivity extends AppCompatActivity {
             preview,
             imageAnalysis
         );
-        
-
     }
     
     private boolean checkCameraPermission() {
