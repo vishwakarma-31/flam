@@ -266,16 +266,6 @@ The implementation has been tested for:
 
 This project is properly committed and pushed to a public repository with a clear commit history demonstrating the development process.
 
-## 🏆 Evaluation Criteria Compliance
-
-| Area | Weight | Status | Details |
-|------|--------|--------|---------|
-| Native-C++ integration (JNI) | 25% | ✅ Complete | Efficient Java ↔ C++ communication |
-| OpenCV usage (correct & efficient) | 20% | ✅ Complete | Canny edge detection with optimization |
-| OpenGL rendering | 20% | ✅ Complete | Smooth real-time OpenGL ES 2.0 rendering |
-| TypeScript web viewer | 20% | ✅ Complete | Functional web viewer with WebSocket |
-| Project structure, documentation, and commit history | 15% | ✅ Complete | Modular structure with comprehensive README |
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
